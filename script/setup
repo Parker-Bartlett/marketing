@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -e
+
+red="\033[31m"
+yellow="\033[33m"
+green="\033[32m"
+endColor="\033[0m"
+
+echo -e "${yellow}=> Fetching Dependencies${endColor}"
+mix deps.get
+
+echo -e "${yellow}=> Setting Up Dev Database${endColor}"
+mix ecto.reset
+
+echo -e "${yellow}=> Setting Up Test Database${endColor}"
+
+MIX_ENV=test mix ecto.drop
+MIX_ENV=test mix ecto.create
+
+echo -e "${green}=> Application is setup${endColor}"
