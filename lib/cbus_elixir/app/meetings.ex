@@ -15,17 +15,14 @@ defmodule CbusElixir.App.Meetings do
   @doc """
   Fetch a paged result for meetings
   """
-  
+
   @spec meetings_for_page_query() :: Ecto.Query.t()
   def meetings_for_page_query() do
-    
-      from(m in Meeting,
-        join: s in assoc(m, :speakers),
-        where: m.date < ^DateTime.utc_now(),
-        order_by: [desc: m.date],
-        preload: [speakers: s]
-      )
-
+    from(m in Meeting,
+      left_join: s in assoc(m, :speakers),
+      where: m.date < ^DateTime.utc_now(),
+      order_by: [desc: m.date]
+    )
   end
 
   @doc """
@@ -34,7 +31,7 @@ defmodule CbusElixir.App.Meetings do
 
   @spec attendees_for_meeting(integer()) :: list(Attendee.t())
   def attendees_for_meeting(id) do
-    query = 
+    query =
       from(a in Attendee,
         where: a.meeting_id == ^id,
         select: a.name
@@ -43,7 +40,6 @@ defmodule CbusElixir.App.Meetings do
     query
     |> Repo.all()
   end
-
 
   @doc """
   Returns the next `count` upcoming meetings

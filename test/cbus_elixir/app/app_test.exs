@@ -29,6 +29,7 @@ defmodule CbusElixir.AppTest do
         |> App.create_speaker()
 
       speaker
+      |> CbusElixir.Repo.preload(:meeting)
     end
 
     test "list_speakers/0 returns all speakers" do
